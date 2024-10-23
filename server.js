@@ -20,9 +20,7 @@ app.use(express.json())
 app.use(cors())
 
 //routes
-app.get('/',(req,res) => {{
-    res.send(`<h1>Aishiteru</h1>`)
-}})
+app.use('/api/v1/users',require('./routes/userRoute'))
 
 //port 
 const port = 8000 || process.env.port

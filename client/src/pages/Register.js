@@ -2,12 +2,35 @@ import React, { useState, useEffect } from "react";
 import { Form, Input, message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-const Register =()=>
-{
-    return(
-        <>
-        <div className="resgister-page ">
-        <Form layout="vertical" >
+import Spinner from "../components/Spinner";
+const Register = () => {
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  //from submit
+  const submitHandler = async (values) => {
+    try {
+      setLoading(true);
+      await axios.post("/users/register", values);
+      message.success("Registeration Successfull");
+      setLoading(false);
+      navigate("/login");
+    } catch (error) {
+      setLoading(false);
+      message.error("something went wrong");
+    }
+  };
+
+  //prevent for login user
+  useEffect(() => {
+    if (localStorage.getItem("user")) {
+      navigate("/");
+    }
+  }, [navigate]);
+  return (
+    <>
+      <div className="resgister-page ">
+        {loading && <Spinner />}
+        <Form layout="vertical" onFinish={submitHandler}>
           <h1>Register Form</h1>
           <Form.Item label="Name" name="name">
             <Input />
@@ -24,8 +47,8 @@ const Register =()=>
           </div>
         </Form>
       </div>
-        </>
-    )
-}
+    </>
+  );
+};
 
 export default Register;
